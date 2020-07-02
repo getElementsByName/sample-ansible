@@ -1,0 +1,20 @@
+- name: check helm installed
+  stat: path=/usr/local/bin/helm
+  register: helm_target_path
+
+- file:
+    path: ~/download
+    state: directory
+    mode: 0755
+  when: helm_target_path.stat.exists == False
+
+- name: Unarchive a file that needs to be downloaded
+  unarchive:
+    src: https://storage.googleapis.com/kubernetes-helm/helm-v2.12.1-linux-amd64.tar.gz
+    dest: ~/download
+    remote_src: yes
+  when: helm_target_path.stat.exists == False
+
+- name: Move to target path
+  command: mv ~/download/linux-amd64/helm /usr/local/bin/helm
+  when: helm_target_path.stat.exists == False

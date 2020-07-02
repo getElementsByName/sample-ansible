@@ -1,0 +1,11 @@
+all:
+  children:
+    kube:
+      children:
+        master-node:
+          hosts: user@server[04:04]
+
+        worker-node:
+          hosts: user@server[01:03]
+    docker:
+    

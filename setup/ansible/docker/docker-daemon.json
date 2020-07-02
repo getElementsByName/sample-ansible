@@ -1,0 +1,7 @@
+{
+  "data-root": "/home/docker/data-root",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "5"
+  }
+}

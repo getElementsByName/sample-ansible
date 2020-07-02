@@ -1,0 +1,34 @@
+# ansible-playbook -i ./hosts.dev.yaml ./kube/install.yml --become --become-user=root
+---
+- hosts: kube
+  tasks:
+      - name: Add Repo
+        copy:
+          src: ./kubernetes.repo
+          dest: /etc/yum.repos.d/kubernetes.repo
+
+      - name: Fix iptables issue in CentOS 7
+        copy:
+          src: ./k8s.conf
+          dest: /etc/sysctl.d/k8s.conf  # sysctl 설정이 부트시마다 반영되도록
+
+      - name: Install kube
+        yum:
+          name:
+            - kubelet
+            - kubeadm
+            - kubectl
+          disable_excludes: kubernetes
+          state: present
+        become: yes
+
+      - name: Start kube service
+        service:
+          name: kubelet
+          state: started
+          enabled: yes
+        become: yes
+
+- hosts: kube-master-node
+  roles:
+    - role: master-node

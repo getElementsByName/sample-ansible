@@ -1,0 +1,13 @@
+# ansible-playbook -i ./hosts.dev.yaml ./kube/presettup.yml --become --become-user=root
+---
+- hosts: all
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/sbin:/bin:/sbin:/usr/local/bin" # 기본 명령어
+  tasks:
+    - include: ./tasks/iptable.yml
+    - include: ./tasks/swapoff.yml
+
+# ======== master
+# mkdir -p $HOME/.kube
+#  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+#  sudo chown $(id -u):$(id -g) $HOME/.kube/config
